@@ -6,8 +6,10 @@ import {
   sendFriendRequest,
   acceptFriendRequest,
   getFriendRequests,
-  getOutgoingFriendReqs
+  getOutgoingFriendReqs,
+  uploadPicture
 } from "../controllers/user.controller.js";
+import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 
@@ -21,5 +23,11 @@ router.put("/friend-request/:id/accept", acceptFriendRequest);
 
 router.get("/friend-requests", getFriendRequests);
 router.get("/outgoing-friend-requests", getOutgoingFriendReqs);
+
+router.post(
+  "/upload-picture",
+  upload.single("image"),
+  uploadPicture
+);
 
 export default router;

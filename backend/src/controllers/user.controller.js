@@ -1,5 +1,7 @@
 import FriendRequest from "../models/FriendRequest.js";
 import User from "../models/User.js";
+import streamifier from "streamifier";
+import cloudinary from "../lib/cloudinary.js";
 
 export async function getRecomendedUsers(req, res) {
   try {
@@ -144,5 +146,52 @@ export async function getOutgoingFriendReqs(req, res) {
   } catch (error) {
     console.log("Error in getOutgoingFriendReqs controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function uploadPicture(req, res) {
+  try {
+    const file = req.file;
+    const { type } = req.body; // 'profile' atau 'banner'
+
+    if (!file || !type) {
+      return res.status(400).json({ message: "Missing file or type" });
+    }
+
+    const validTypes = ["profile", "banner"];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({ message: "Invalid picture type" });
+    }
+
+    const result = await new Promise((resolve, reject) => {
+      const cloudStream = cloudinary.uploader.upload_stream(
+        {
+          folder: type === "profile" ? "zupa_profile_pictures" : "zupa_banner_pictures",
+          public_id: `${req.user.id}-${type}-${Date.now()}`,
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+
+      streamifier.createReadStream(file.buffer).pipe(cloudStream);
+    });
+
+    const updateField =
+      type === "profile"
+        ? { profilePicture: result.secure_url }
+        : { bannerPicture: result.secure_url };
+
+    const user = await User.findByIdAndUpdate(req.user.id, updateField, {
+      new: true,
+    });
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    console.error("Upload error:", err); // Tambahkan log ini
+    res
+      .status(500)
+      .json({ message: "Failed to upload picture", error: err.message });
   }
 }
