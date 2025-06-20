@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router";
 
 import LoginPage from "./auth/LoginPage";
 import RegisterPage from "./auth/RegisterPage";
-import CompleteRegistrationPage from "./auth/CompleteRegistrationPage"
+import CompleteRegistrationPage from "./auth/CompleteRegistrationPage";
 
 import HomePage from "./pages/HomePage";
 import PageLoader from "./components/PageLoader";
@@ -22,11 +22,27 @@ const App = () => {
       <Routes>
         <Route
           path="/login"
-          element={!isAuth ? <LoginPage /> : <Navigate to="/" />}
+          element={
+            !isAuth ? (
+              <LoginPage />
+            ) : (
+              <Navigate
+                to={isCompleteRegistration ? "/" : "/complete-registration"}
+              />
+            )
+          }
         />
         <Route
           path="/register"
-          element={!isAuth ? <RegisterPage /> : <Navigate to="/" />}
+          element={
+            !isAuth ? (
+              <RegisterPage />
+            ) : (
+              <Navigate
+                to={isCompleteRegistration ? "/" : "/complete-registration"}
+              />
+            )
+          }
         />
 
         <Route
@@ -46,7 +62,7 @@ const App = () => {
             isAuth && isCompleteRegistration ? (
               <HomePage />
             ) : (
-              <Navigate to={!isAuth ? "/login" : "/isCompleteRegistration"} />
+              <Navigate to={!isAuth ? "/login" : "/complete-registration"} />
             )
           }
         />

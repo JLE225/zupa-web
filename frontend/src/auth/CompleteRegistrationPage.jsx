@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuthUser from "../hooks/useAuthUser.js";
-import toast, { LoaderIcon } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { completeRegistration } from "../lib/api.js";
 import BackgroundParent from "../components/BackgroundParent.jsx";
-import { CameraIcon, ShipWheelIcon } from "lucide-react";
+import { CameraIcon, ShipWheelIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import CustomInput from "../components/CustomInput.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
@@ -13,7 +13,7 @@ const CompleteRegistrationPage = () => {
   const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
-    username: authUser?.fullName || "",
+    username: authUser?.username || "",
     bio: authUser?.bio || "",
     location: authUser?.location || "",
     profilePicture: authUser?.profilePicture || "",
@@ -24,9 +24,12 @@ const CompleteRegistrationPage = () => {
     mutationFn: completeRegistration,
     onSuccess: () => {
       toast.success(
-        "You're all set, Zupan 🌌 Let's explore the galaxy of connections."
+        "You're all set, Zupa 🌌 Let's explore the galaxy of connections."
       );
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
     },
   });
 

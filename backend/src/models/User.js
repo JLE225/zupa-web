@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
 
     isCompleteRegistration: {
       type: Boolean,
-      default: true,
+      default: false,
     },
 
     friends: [

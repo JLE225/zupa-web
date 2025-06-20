@@ -3,7 +3,7 @@ import { Orbit } from "lucide-react";
 import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
-import { register } from "../lib/api";
+import { register } from "../lib/api.js";
 import CustomInput from "../components/CustomInput";
 import BackgroundParent from "../components/BackgroundParent";
 

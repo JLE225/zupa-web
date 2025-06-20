@@ -6,17 +6,22 @@ export const register = async (registerData) => {
   return response.data;
 };
 
+export const login = async (loginData) => {
+  const response = await axiosInstance.post("/auth/login", loginData);
+  return response.data;
+};
+
 export const getAuthUser = async () => {
   const res = await axiosInstance.get("/auth/myprofile");
   return res.data;
 };
 
 export const completeRegistration = async (userData) => {
-  const res = await axios.post("/auth/complete-registration", userData);
+  const res = await axiosInstance.post("/auth/complete-registration", userData);
   return res.data;
 };
 
 export const uploadProfile = async () => {
-  const res = await axios.post("/user/upload-picture", userData);
+  const res = await axiosInstance.post("/user/upload-picture", userData);
   return res.data;
 };

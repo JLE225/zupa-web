@@ -49,6 +49,7 @@ export async function register(req, res) {
       username,
       password,
       profilePicture: "https://i.imgur.com/amTDjqy.jpeg",
+      // isCompleteRegistration: false
     });
 
     try {
