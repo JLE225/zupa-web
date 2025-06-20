@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useAuthUser from "../hooks/useAuthUser";
-import toast from "react-hot-toast";
-import { completeOnboarding } from "../lib/api.js";
+import useAuthUser from "../hooks/useAuthUser.js";
+import toast, { LoaderIcon } from "react-hot-toast";
+import { completeRegistration } from "../lib/api.js";
 import BackgroundParent from "../components/BackgroundParent.jsx";
-import { CameraIcon } from "lucide-react";
+import { CameraIcon, ShipWheelIcon } from "lucide-react";
 import { useState } from "react";
+import CustomInput from "../components/CustomInput.jsx";
+import CustomTextarea from "../components/CustomTextarea.jsx";
 
-const OnBoardingPage = () => {
+const CompleteRegistrationPage = () => {
   const { authUser } = useAuthUser();
   const queryClient = useQueryClient();
 
@@ -18,8 +20,8 @@ const OnBoardingPage = () => {
     bannerPicture: authUser?.bannerPicture || "",
   });
 
-  const { mutate: onBoardingMutation, isPending } = useMutation({
-    mutationFn: completeOnboarding,
+  const { mutate: completeRegistrationMutation, isPending } = useMutation({
+    mutationFn: completeRegistration,
     onSuccess: () => {
       toast.success(
         "You're all set, Zupan 🌌 Let's explore the galaxy of connections."
@@ -30,7 +32,7 @@ const OnBoardingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onBoardingMutation(formState);
+    completeRegistrationMutation(formState);
   };
 
   return (
@@ -67,6 +69,42 @@ const OnBoardingPage = () => {
                   Upload
                 </button>
               </div>
+
+              <div className="form-control w-full">
+                <CustomInput
+                  label="Username"
+                  name="username"
+                  value={formState.username}
+                  disabled
+                />
+              </div>
+              <div className="form-control w-full">
+                <CustomTextarea
+                  label="Bio"
+                  name="bio"
+                  value={formState.bio}
+                  onChange={(e) =>
+                    setFormState({ ...formState, bio: e.target.value })
+                  }
+                />
+              </div>
+              <button
+                className="btn btn-primary w-full"
+                disabled={isPending}
+                type="submit"
+              >
+                {!isPending ? (
+                  <>
+                    <ShipWheelIcon className="size-5 mr-2" />
+                    Complete Registration
+                  </>
+                ) : (
+                  <>
+                    <LoaderIcon className="size-5 mr-2 animate-spin" />
+                    Loading...
+                  </>
+                )}
+              </button>
             </div>
           </form>
         </div>
@@ -75,4 +113,4 @@ const OnBoardingPage = () => {
   );
 };
 
-export default OnBoardingPage;
+export default CompleteRegistrationPage;

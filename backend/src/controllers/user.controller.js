@@ -12,7 +12,7 @@ export async function getRecomendedUsers(req, res) {
       $and: [
         { _id: { $ne: currentUserId } },
         { $id: { $nin: currentUser.friends } },
-        { isOnBoarding: true },
+        { isCompleteRegistration: true },
       ],
     });
 

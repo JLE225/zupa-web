@@ -123,7 +123,7 @@ export function logout(req, res) {
   res.status(200).json({ success: true, message: "Logout succesfuly" });
 }
 
-export async function onboard(req, res) {
+export async function completeRegistration(req, res) {
   try {
     const userId = req.user._id;
     const { username } = req.body;
@@ -136,7 +136,7 @@ export async function onboard(req, res) {
       userId,
       {
         ...req.body,
-        isOnBoarding: true,
+        isCompleteRegistration: true,
       },
       { new: true }
     );
@@ -152,15 +152,15 @@ export async function onboard(req, res) {
       });
 
       console.log(
-        `Stream user updated after onboarding for ${updatedUser.username}`
+        `Stream user updated after completeRegistration for ${updatedUser.username}`
       );
     } catch (streamError) {
-      console.error("Error in onboard controller: ", streamError.message);
+      console.error("Error in completeRegistration controller: ", streamError.message);
     }
 
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
-    console.log("Onboarding error: ", error);
+    console.log("completeRegistration error: ", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }

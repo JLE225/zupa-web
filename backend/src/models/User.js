@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    isOnBoarding: {
+    isCompleteRegistration: {
       type: Boolean,
       default: true,
     },

@@ -11,7 +11,12 @@ export const getAuthUser = async () => {
   return res.data;
 };
 
-export const completeOnboarding = async (userData) => {
-  const res = await axios.post("/auth/onboarding", userData);
+export const completeRegistration = async (userData) => {
+  const res = await axios.post("/auth/complete-registration", userData);
+  return res.data;
+};
+
+export const uploadProfile = async () => {
+  const res = await axios.post("/user/upload-picture", userData);
   return res.data;
 };

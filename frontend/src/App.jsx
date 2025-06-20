@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router";
 
 import LoginPage from "./auth/LoginPage";
 import RegisterPage from "./auth/RegisterPage";
-import OnBoardingPage from "./auth/OnBoardingPage"
+import CompleteRegistrationPage from "./auth/CompleteRegistrationPage"
 
 import HomePage from "./pages/HomePage";
 import PageLoader from "./components/PageLoader";
@@ -13,7 +13,7 @@ const App = () => {
   const { isLoading, authUser } = useAuthUser();
 
   const isAuth = Boolean(authUser);
-  const isOnboarding = authUser?.isOnboarding;
+  const isCompleteRegistration = authUser?.isCompleteRegistration;
 
   if (isLoading) return <PageLoader />;
 
@@ -30,10 +30,10 @@ const App = () => {
         />
 
         <Route
-          path="/onboarding"
+          path="/complete-registration"
           element={
-            isAuth && !isOnboarding ? (
-              <OnBoardingPage />
+            isAuth && !isCompleteRegistration ? (
+              <CompleteRegistrationPage />
             ) : (
               <Navigate to={isAuth ? "/" : "/login"} />
             )
@@ -43,10 +43,10 @@ const App = () => {
         <Route
           path="/"
           element={
-            isAuth && isOnboarding ? (
+            isAuth && isCompleteRegistration ? (
               <HomePage />
             ) : (
-              <Navigate to={!isAuth ? "/login" : "/onboarding"} />
+              <Navigate to={!isAuth ? "/login" : "/isCompleteRegistration"} />
             )
           }
         />
