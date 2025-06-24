@@ -21,3 +21,64 @@
     animation: pulse-glow 2s ease-in-out infinite;
   }
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.str-chat,
+.str-chat__channel,
+.str-chat__container,
+.str-chat__main-panel,
+.str-chat__message-list,
+.str-chat__message-input,
+.str-chat__thread,
+.str-chat__header,
+.str-chat__virtual-list-scroll,
+.str-chat__virtual-list {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.str-chat__channel {
+  height: 100%;
+}
+
+.str-chat__container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.str-chat__list {
+  background-color: transparent !important;
+  padding: 12px;
+}
+
+.str-chat__list-notifications {
+  display: none;
+}
+
+.str-chat__message-input {
+  padding: 12px;
+  border-top: 1px solid var(--color-base-300);
+}
+
+.str-chat__message-textarea {
+  color: white !important;
+}
+
+.str-chat__message-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.str-chat__channel-list {
+  background: transparent;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-base-300);
+}

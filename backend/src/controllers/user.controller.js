@@ -11,7 +11,7 @@ export async function getRecomendedUsers(req, res) {
     const recomendedUsers = await User.find({
       $and: [
         { _id: { $ne: currentUserId } },
-        { $id: { $nin: currentUser.friends } },
+        { id: { $nin: currentUser.friends } },
         { isCompleteRegistration: true },
       ],
     });
@@ -42,17 +42,20 @@ export async function sendFriendRequest(req, res) {
     const { id: recipientId } = req.params;
 
     if (myId === recipientId) {
+      console.log("You can't send friend request to yourself");
       return res
         .status(400)
         .json({ message: "You can't send friend request to yourself" });
     }
 
     const recipient = await User.findById(recipientId);
+    console.log("User nor found")
     if (!recipient) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (recipient.friends.includes(myId)) {
+    if (recipient.friends.map((id) => id.toString()).includes(myId)) {
+      console.log("recipient.friends:", recipient.friends, "myId:", myId);
       return res
         .status(400)
         .json({ message: "You are already friends with this user" });
@@ -66,6 +69,7 @@ export async function sendFriendRequest(req, res) {
     });
 
     if (existingRequest) {
+      console.log("Friend request already exists:", existingRequest);
       return res.status(400).json({
         message: "You have already sent a friend request to this user",
       });
@@ -76,7 +80,7 @@ export async function sendFriendRequest(req, res) {
       recipient: recipientId,
     });
 
-    res.status(201).json(friendRequest());
+    res.status(201).json(friendRequest);
   } catch (error) {
     console.error("Error in sendFriendRequest controller: ", error);
     res.status(500).json({ message: "Error sending friend request" });
@@ -116,12 +120,35 @@ export async function acceptFriendRequest(req, res) {
   }
 }
 
+export async function declineFriendRequest(req, res) {
+  try {
+    const { id: requestId } = req.params;
+    const friendRequest = await FriendRequest.findById(requestId);
+
+    if (!friendRequest) {
+      return res.status(404).json({ message: "Friend request not found" });
+    }
+
+    if (friendRequest.recipient.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to decline this request" });
+    }
+
+    await friendRequest.deleteOne();
+
+    res.status(200).json({ message: "Friend request declined" });
+  } catch (error) {
+    console.error("Error declining friend request:", error.message);
+    res.status(500).json({ message: "Error declining friend request" });
+  }
+}
+
+
 export async function getFriendRequests(req, res) {
   try {
     const incomingReqs = await FriendRequest.find({
       recipient: req.user.id,
       status: "pending",
-    }).populate("sender", "username, profilePicture, bio");
+    }).populate("sender", "username profilePicture bio");
 
     const acceptedReqs = await FriendRequest.find({
       sender: req.user.id,
@@ -166,7 +193,10 @@ export async function uploadPicture(req, res) {
     const result = await new Promise((resolve, reject) => {
       const cloudStream = cloudinary.uploader.upload_stream(
         {
-          folder: type === "profile" ? "zupa_profile_pictures" : "zupa_banner_pictures",
+          folder:
+            type === "profile"
+              ? "zupa_profile_pictures"
+              : "zupa_banner_pictures",
           public_id: `${req.user.id}-${type}-${Date.now()}`,
         },
         (error, result) => {

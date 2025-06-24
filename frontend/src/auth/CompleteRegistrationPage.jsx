@@ -15,7 +15,6 @@ const CompleteRegistrationPage = () => {
   const [formState, setFormState] = useState({
     username: authUser?.username || "",
     bio: authUser?.bio || "",
-    location: authUser?.location || "",
     profilePicture: authUser?.profilePicture || "",
     bannerPicture: authUser?.bannerPicture || "",
   });

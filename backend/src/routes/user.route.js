@@ -7,7 +7,8 @@ import {
   acceptFriendRequest,
   getFriendRequests,
   getOutgoingFriendReqs,
-  uploadPicture
+  uploadPicture,
+  declineFriendRequest
 } from "../controllers/user.controller.js";
 import upload from "../middleware/upload.middleware.js";
 
@@ -20,6 +21,7 @@ router.get("/friends", getMyFriends);
 
 router.post("/friend-request/:id", sendFriendRequest);
 router.put("/friend-request/:id/accept", acceptFriendRequest);
+router.delete("/friend-request/:id/decline", declineFriendRequest);
 
 router.get("/friend-requests", getFriendRequests);
 router.get("/outgoing-friend-requests", getOutgoingFriendReqs);
